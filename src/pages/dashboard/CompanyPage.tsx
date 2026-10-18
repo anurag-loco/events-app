@@ -233,43 +233,64 @@ function EventListItem({ event, regCount }: { event: any; regCount?: number }) {
     ? event.description.replace(/[*#_~`>]/g, "").split(/(?<=\.)\s+/).filter(Boolean).slice(0, 2).join(" ").slice(0, 200)
     : "";
 
+  const date = event.event_date ? new Date(event.event_date) : null;
+
   return (
-    <Link to={`/register/${event.slug}`}>
-      <Card className="overflow-hidden hover:shadow-lg transition-all hover:-translate-y-0.5 border-border/50">
-        <div className="flex flex-col sm:flex-row">
-          <div className="sm:w-52 sm:min-h-[140px] h-40 sm:h-auto bg-muted flex-shrink-0 overflow-hidden">
-            {event.background_image_url ? (
-              <img src={event.background_image_url} alt={event.name} className="w-full h-full object-cover" />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center">
-                <Calendar className="w-10 h-10 text-muted-foreground/40" />
-              </div>
+    <Link
+      to={`/register/${event.slug}`}
+      className="group block rounded-[20px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+    >
+      <article className="relative isolate grid min-h-[320px] grid-cols-1 content-end items-end gap-5 overflow-hidden rounded-[20px] bg-[hsl(240_25%_9%)] p-[18px] text-white sm:min-h-[188px] sm:grid-cols-[minmax(0,1fr)_auto] sm:px-[26px] sm:py-[22px]">
+        {event.background_image_url ? (
+          <img
+            src={event.background_image_url}
+            alt=""
+            className="absolute inset-0 -z-20 h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+          />
+        ) : (
+          <div
+            aria-hidden
+            className="absolute inset-0 -z-20"
+            style={{
+              background:
+                "radial-gradient(circle at 85% 15%, hsl(var(--primary) / 0.6), transparent 50%), radial-gradient(hsl(0 0% 100% / 0.1) 1px, transparent 1px) 0 0 / 14px 14px, hsl(240 25% 11%)",
+            }}
+          />
+        )}
+        <div
+          aria-hidden
+          className="absolute inset-0 -z-10 bg-gradient-to-t from-[hsl(240_30%_6%/0.95)] via-[hsl(240_30%_6%/0.8)] to-[hsl(240_30%_6%/0.1)] sm:bg-gradient-to-r sm:from-[hsl(240_30%_6%/0.94)] sm:via-[hsl(240_30%_6%/0.78)] sm:to-[hsl(240_30%_6%/0.15)]"
+        />
+
+        <div className="flex min-w-0 max-w-[560px] flex-col gap-2.5">
+          {date && (
+            <span className="inline-flex items-center gap-2 self-start whitespace-nowrap rounded-full bg-white px-3 py-1.5 text-[13px] font-semibold text-[hsl(240_30%_14%)]">
+              {format(date, "EEE d MMM")}
+              <span className="text-primary">{format(date, "h:mm a")}</span>
+            </span>
+          )}
+          <h3 className="line-clamp-2 font-display text-[21px] font-bold leading-[1.12] tracking-[-0.01em] text-white [text-wrap:balance] sm:text-[25px]">
+            {event.name}
+          </h3>
+          {shortDesc && <p className="line-clamp-1 text-sm text-white/80">{shortDesc}</p>}
+          <div className="flex min-w-0 flex-wrap gap-x-[18px] gap-y-1.5 text-[13px] text-white/90">
+            {event.location_value && (
+              <span className="inline-flex min-w-0 max-w-full items-center gap-1.5">
+                <MapPin className="h-[15px] w-[15px] shrink-0 text-white/65" />
+                <span className="truncate font-medium">{event.location_value}</span>
+              </span>
+            )}
+            {regCount !== undefined && (
+              <span className="inline-flex items-center gap-1.5">
+                <Users className="h-[15px] w-[15px] shrink-0 text-white/65" />
+                <span className="font-medium">{regCount.toLocaleString()} going</span>
+              </span>
             )}
           </div>
-          <CardContent className="flex-1 p-5 flex flex-col justify-between gap-3">
-            <div>
-              {event.event_date && (
-                <p className="text-xs font-semibold text-primary uppercase tracking-wide mb-1">
-                  {format(new Date(event.event_date), "EEE, MMM d, yyyy · h:mm a")}
-                </p>
-              )}
-              <h3 className="font-display font-bold text-xl leading-tight mb-1">{event.name}</h3>
-              {shortDesc && <p className="text-sm text-muted-foreground line-clamp-2">{shortDesc}</p>}
-            </div>
-            <div className="flex items-center justify-between">
-              <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
-                {event.location_value && (
-                  <span className="flex items-center gap-1"><MapPin className="w-3.5 h-3.5" />{event.location_value}</span>
-                )}
-                {regCount !== undefined && (
-                  <span className="flex items-center gap-1"><Users className="w-3.5 h-3.5" />{regCount} attending</span>
-                )}
-              </div>
-              <Button className="bg-primary" size="sm">Register <ArrowRight className="ml-1 w-3.5 h-3.5" /></Button>
-            </div>
-          </CardContent>
         </div>
-      </Card>
+
+        <Button className="w-full bg-primary px-6 text-primary-foreground hover:bg-primary/90 sm:w-auto">Register</Button>
+      </article>
     </Link>
   );
 }

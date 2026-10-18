@@ -489,7 +489,7 @@ const Landing = () => {
               </motion.div>
               <h1 className="text-5xl sm:text-6xl lg:text-[68px] 2xl:text-[80px] font-display tracking-[-0.035em] leading-[0.95] text-foreground mb-7" style={{ fontWeight: titleWeight }}>
                 {hero.headline_prefix}{" "}
-                <span className="inline-block relative">
+                <span className="inline-grid justify-items-center relative">
                   <AnimatePresence mode="wait">
                     <motion.span
                       key={rotatingWords[wordIndex]}
@@ -497,13 +497,13 @@ const Landing = () => {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -16 }}
                       transition={{ duration: 0.35 }}
-                      className="text-primary inline-block italic"
+                      className="text-primary inline-block italic [grid-area:1/1]"
                     >
                       {rotatingWords[wordIndex]}
                     </motion.span>
                   </AnimatePresence>
                   {/* Invisible longest word to reserve space */}
-                  <span className="invisible inline-block h-0 overflow-hidden" aria-hidden="true">
+                  <span className="invisible inline-block italic [grid-area:1/1]" aria-hidden="true">
                     {rotatingWords.reduce((a, b) => (a.length >= b.length ? a : b), "")}
                   </span>
                 </span>
@@ -511,9 +511,14 @@ const Landing = () => {
               <p className="text-lg lg:text-xl text-muted-foreground max-w-xl mx-auto mb-10 leading-relaxed">
                 {hero.subhead}
               </p>
-              <Button size="lg" className="text-base font-semibold px-9 h-14 shadow-xl shadow-foreground/10" asChild>
-                <Link to="/auth">{hero.cta} <ArrowRight className="ml-2 w-4 h-4" /></Link>
-              </Button>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+                <Button size="lg" className="text-base font-semibold px-9 h-14 shadow-xl shadow-foreground/10" asChild>
+                  <Link to="/auth">{hero.cta} <ArrowRight className="ml-2 w-4 h-4" /></Link>
+                </Button>
+                <Button size="lg" variant="outline" className="text-base font-semibold px-9 h-14 bg-background/60" asChild>
+                  <Link to="/auth">Log in</Link>
+                </Button>
+              </div>
             </motion.div>
           </div>
         </div>
